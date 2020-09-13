@@ -33,13 +33,15 @@ class ShowImpl extends Component {
         return(
             <Wrapper>
                 <div>
-                    <Link to={"/"}>Home</Link>
                     { this.props.admin ?
                         <Link to={`/${this.state.key}/edit`}>Edit</Link>
                         :
                         null
                     }
 
+                    <br/>
+
+                    <img src={this.state.post.cover} alt={""} style={{maxWidth:400}}/>
                     <br/>
 
                     Title: {this.state.post.title}

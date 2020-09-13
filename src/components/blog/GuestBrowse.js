@@ -45,15 +45,19 @@ class GuestBrowse extends Component {
                     <table style={{margin: "auto"}}>
                         <thead>
                         <tr>
+                            <th></th>
                             <th>Title</th>
-                            <th>Description</th>
+                            <th>Date</th>
                         </tr>
                         </thead>
                         <tbody>
                         {this.state.posts.map(post =>
                             <tr>
+                                <td>
+                                    <Link to={`/guest/${post.key}`}><img src={post.cover} alt={""} style={{maxWidth:400}}/></Link>
+                                    <br/></td>
                                 <td><Link to={`/guest/${post.key}`}>{post.title}</Link></td>
-                                <td>{post.desc}</td>
+                                <td>{(new Date(post.posted)).toLocaleDateString()}</td>
                             </tr>
                         )}
                         </tbody>

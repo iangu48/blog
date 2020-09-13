@@ -1,5 +1,5 @@
 import React, {Component, useContext} from 'react';
-import firebase from "../../firebase";
+import firebase, {storage} from "../../firebase";
 import {navigate} from "@reach/router";
 import {UserContext} from "../../providers/UserProvider";
 import Wrapper from "../Wrapper";
@@ -51,6 +51,12 @@ class EditImpl extends Component {
         state[e.target.name] = e.target.value;
         this.setState({post: state});
     }
+
+    onFileUpload = (e) => {
+        const state = this.state;
+        state[e.target.name] = e.target.files[0];
+        this.setState(state);
+    }
     
     onSubmit = (e) => {
         e.preventDefault()
@@ -59,24 +65,54 @@ class EditImpl extends Component {
 
         const updateRef = firebase.firestore().collection('posts').doc(this.state.key);
 
-        updateRef.set({
-            title, desc, posted, updated, cover
-        }).then((docRef) => {
-            this.setState({
-                key: '',
-                title: '',
-                desc: '',
-                posted: '',
-                updated: '',
-                cover: '',
+        if (typeof cover === "string") {
+            updateRef.set({
+                title, desc, posted, updated, cover
+            }).then((docRef) => {
+                this.setState({
+                    key: '',
+                    title: '',
+                    desc: '',
+                    posted: '',
+                    updated: '',
+                    cover: '',
+                });
+                navigate(`../`);
+
+            }).catch((error) => {
+                console.error("Error: ", error);
             });
-            navigate(`../`);
+        } else {
+            const name = `${Date.now()}-${cover.name}`
+            const uploadTask = storage.ref(`/covers/${name}`).put(cover);
+            uploadTask.on("state_changed", console.log, console.error, () => {
+                storage
+                    .ref("covers")
+                    .child(name)
+                    .getDownloadURL()
+                    .then((url) => {
+                        updateRef.set({
+                            title, desc, posted, updated, cover: url
+                        }).then((docRef) => {
+                            this.setState({
+                                key: '',
+                                title: '',
+                                desc: '',
+                                posted: '',
+                                updated: '',
+                                cover: '',
+                            });
+                            navigate(`../`);
 
-        }).catch((error) => {
-            console.error("Error: ", error);
-        });
+                        }).catch((error) => {
+                            console.error("Error: ", error);
+                        });
+                    })
+            });
+        }
 
-        console.log("reached")
+
+
 
     }
 
@@ -93,12 +129,18 @@ class EditImpl extends Component {
                     <input type="text" name="desc" value={this.state.desc}
                            onChange={this.onChange} placeholder="Description"/>
 
-                    <label htmlFor="cover">Cover:</label>
-                    <input type="text" name="cover" value={this.state.cover}
-                           onChange={this.onChange} placeholder="cover"/>
+                    <label htmlFor="cover">
+                        Upload/change cover
+                        <img src={this.state.cover} alt={""} style={{maxWidth:100}}/>
+                    </label>
+                    <input type={"file"} name={"cover"} onChange={this.onFileUpload}/>
 
                     <button type="submit">Submit</button>
                 </form>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
                 <button onClick={this.delete.bind(this, this.state.key)}>Delete</button>
 
             </Wrapper>

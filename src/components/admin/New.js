@@ -1,18 +1,19 @@
 import React, {Component} from "react";
-import firebase from "../../firebase";
+import firebase, {storage} from "../../firebase";
 import {Link, navigate} from "@reach/router";
 import Wrapper from "../Wrapper";
 
 class New extends Component {
     constructor(props) {
         super(props);
-        this.ref = firebase.firestore().collection("posts");
+        this.postsCollection = firebase.firestore().collection("posts");
         this.state = {
             title: '',
             desc: '',
             posted: Date.now(),
             updated: Date.now(),
-            cover: 'default cover',
+            cover: '',
+
         };
     }
 
@@ -22,30 +23,68 @@ class New extends Component {
         this.setState(state);
     }
 
+    onFileUpload = (e) => {
+        const state = this.state;
+        state[e.target.name] = e.target.files[0];
+        this.setState(state);
+    }
+
     onSubmit = (e) => {
         e.preventDefault();
 
         const { title, desc, posted, updated, cover } = this.state;
 
-        this.ref.add({
-            title,
-            desc,
-            posted,
-            updated,
-            cover
-        }).then((docRef) => {
-            this.setState({
-                title: '',
-                desc: '',
-                posted: Date.now(),
-                updated: Date.now(),
-                cover: '',
+        if (cover === '') {
+            this.postsCollection.add({
+                title,
+                desc,
+                posted,
+                updated,
+                cover
+            }).then((docRef) => {
+                this.setState({
+                    title: '',
+                    desc: '',
+                    posted: Date.now(),
+                    updated: Date.now(),
+                    cover: '',
+                });
+                navigate(`/${docRef.id}`);
+            })
+                .catch((error) => {
+                    console.error("Error adding document: ", error);
+                });
+        } else {
+            const name = `${Date.now()}-${cover.name}`
+            const uploadTask = storage.ref(`/covers/${name}`).put(cover);
+            uploadTask.on("state_changed", console.log, console.error, () => {
+                storage
+                    .ref("covers")
+                    .child(name)
+                    .getDownloadURL()
+                    .then((url) => {
+                        this.postsCollection.add({
+                            title,
+                            desc,
+                            posted,
+                            updated,
+                            cover: url
+                        }).then((docRef) => {
+                            this.setState({
+                                title: '',
+                                desc: '',
+                                posted: Date.now(),
+                                updated: Date.now(),
+                                cover: '',
+                            });
+                            navigate(`/${docRef.id}`);
+                        })
+                            .catch((error) => {
+                                console.error("Error adding document: ", error);
+                            });
+                    })
             });
-            navigate(`/${docRef.id}`);
-        })
-            .catch((error) => {
-                console.error("Error adding document: ", error);
-            });
+        }
     }
 
     render() {
@@ -63,6 +102,9 @@ class New extends Component {
                         <label htmlFor="desc">Description:</label>
                         <textArea name="desc" onChange={this.onChange} placeholder="Description" cols="80"
                                   rows="3">{desc}</textArea>
+
+                        <label htmlFor={"cover"}>Upload Cover</label>
+                        <input type={"file"} name={"cover"} onChange={this.onFileUpload}/>
 
                         <button type="submit">Submit</button>
                     </form>

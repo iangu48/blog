@@ -33,6 +33,9 @@ class GuestShow extends Component {
         return(
             <GuestWrapper>
                 <div>
+
+                    <img src={this.state.post.cover} alt={""} style={{maxWidth:400}}/>
+                    <br/>
                     <br/>
                     Title: {this.state.post.title}
                     <br/>
