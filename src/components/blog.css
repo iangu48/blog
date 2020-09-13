@@ -1,0 +1,11 @@
+.h100 {
+    margin:0 0 0 0;
+    padding:10px;
+    height:100vh;
+}
+
+html, body, #root {
+    text-align: center;
+    background-color: #9fadb3;
+    height: 100%;
+}
