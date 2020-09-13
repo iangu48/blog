@@ -16,6 +16,16 @@ class EditImpl extends Component {
             cover: '',
         }
     };
+
+    delete(id) {
+
+        firebase.firestore().collection('posts').doc(id).delete().then( () => {
+            navigate('/');
+            }).catch((error) => {
+                console.log("error: ", error);
+            }
+        );
+    }
     
     componentDidMount() {
         const ref = firebase.firestore().collection('posts').doc(this.props.id);
@@ -89,6 +99,8 @@ class EditImpl extends Component {
 
                     <button type="submit">Submit</button>
                 </form>
+                <button onClick={this.delete.bind(this, this.state.key)}>Delete</button>
+
             </Wrapper>
         );
     }
