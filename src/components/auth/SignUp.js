@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import {Link, navigate} from "@reach/router";
 import {auth, generateUserDocument, signInWithGoogle} from "../../firebase";
+import GuestWrapper from "../GuestWrapper";
+import Title from "antd/lib/typography/Title";
+import { Form, Input, Button, Space } from 'antd';
+import {GoogleOutlined, LockOutlined, MailOutlined, UserOutlined} from "@ant-design/icons";
+import Text from "antd/lib/typography/Text";
+
+
 const SignUp = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -35,75 +42,102 @@ const SignUp = () => {
         }
     };
     return (
-        <div className="mt-8">
-            <h1 className="text-3xl mb-2 text-center font-bold">Sign Up</h1>
-            <div className="border border-blue-400 mx-auto w-11/12 md:w-2/4 rounded py-8 px-4 md:px-8">
-                {error !== null && (
-                    <div className="py-4 bg-red-600 w-full text-white text-center mb-3">
-                        {error}
-                    </div>
-                )}
-                <form className="">
-                    <label htmlFor="displayName" className="block">
-                        Display Name:
-                    </label>
-                    <input
-                        type="text"
-                        className="my-1 p-1 w-full "
-                        name="displayName"
-                        value={displayName}
-                        placeholder="E.g: Faruq"
-                        id="displayName"
-                        onChange={event => onChangeHandler(event)}
-                    />
-                    <label htmlFor="userEmail" className="block">
-                        Email:
-                    </label>
-                    <input
-                        type="email"
-                        className="my-1 p-1 w-full"
-                        name="userEmail"
-                        value={email}
-                        placeholder="E.g: faruq123@gmail.com"
-                        id="userEmail"
-                        onChange={event => onChangeHandler(event)}
-                    />
-                    <label htmlFor="userPassword" className="block">
-                        Password:
-                    </label>
-                    <input
-                        type="password"
-                        className="mt-1 mb-3 p-1 w-full"
-                        name="userPassword"
-                        value={password}
-                        placeholder="Your Password"
-                        id="userPassword"
-                        onChange={event => onChangeHandler(event)}
-                    />
-                    <button
-                        className="bg-green-400 hover:bg-green-500 w-full py-2 text-white"
-                        onClick={event => {
-                            createUserWithEmailAndPasswordHandler(event, email, password);
-                        }}
+        <GuestWrapper>
+            <Title level={2} style={{color: "white", fontWeight: 350, marginTop: 100}}>Sign Up</Title>
+            <Space direction={"vertical"}>
+                {error !== null && (<div>{error}</div>)}
+
+                <Form style={{width: "100"}}>
+                    <Form.Item
+                        name={"displayName"}
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Please input your display name!',
+                            },
+                        ]}>
+                        <Input
+                            type="text"
+                            name="displayName"
+                            value={displayName}
+                            placeholder="Display name"
+                            id="displayName"
+                            onChange={event => onChangeHandler(event)}
+                            prefix={<UserOutlined />}
+                        />
+                    </Form.Item>
+
+                    <Form.Item
+                        name="email"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Please input your email!',
+                            },
+                        ]}
                     >
-                        Sign up
-                    </button>
-                </form>
-                <p className="text-center my-3">or</p>
-                <button
-                    className="bg-red-500 hover:bg-red-600 w-full py-2 text-white"
-                    onClick={signInWithGoogle}
-                >
-                    Sign In with Google
-                </button>
-                <p className="text-center my-3">
-                    Already have an account?{" "}
-                    <Link to="/" className="text-blue-500 hover:text-blue-600">
-                        Sign in here
-                    </Link>
-                </p>
-            </div>
-        </div>
+                        <Input
+                            type="email"
+                            name="userEmail"
+                            value={email}
+                            placeholder="example@gmail.com"
+                            id="userEmail"
+                            onChange={event => onChangeHandler(event)}
+                            prefix={<MailOutlined />}
+                        />
+                    </Form.Item>
+
+                    <Form.Item
+                        name="password"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Please input your Password!',
+                            },
+                        ]}
+                    >
+                        <Input
+                            prefix={<LockOutlined />}
+                            type="password"
+                            name="userPassword"
+                            id="userPassword"
+                            placeholder="Password"
+                            onChange = {(event) => onChangeHandler(event)}
+                        />
+                    </Form.Item>
+
+                    <Form.Item>
+                        <Button type={"primary"}
+                                onClick={event => {createUserWithEmailAndPasswordHandler(event, email, password);}}
+                        >
+                            Sign up
+                        </Button>
+                    </Form.Item>
+
+                </Form>
+                <br/>
+                <Form>
+                    <Form.Item>
+                        <Button
+                            onClick={signInWithGoogle}>
+                            <GoogleOutlined/>
+                            &nbsp;Sign in with Google
+                        </Button>
+                    </Form.Item>
+                    <Form.Item>
+                        <Text style={{color: "#fdfdffff"}}>Already have an account?<Link to="/"> Sign in here </Link></Text>
+
+                    </Form.Item>
+                    <Form.Item>
+                        <Link to = "guest">
+                            Continue as guest
+                        </Link>
+                    </Form.Item>
+                </Form>
+
+
+            </Space>
+        </GuestWrapper>
     );
 };
 export default SignUp;

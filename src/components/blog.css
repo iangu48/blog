@@ -1,11 +1,26 @@
+.App, html, body, #root {
+    background-color: #393d3f;
+    height: 100%;
+}
+
+.particles-js {
+    position : absolute;
+    width:100%;
+    height:100%;
+}
+
 .h100 {
     margin:0 0 0 0;
     padding:10px;
     height:100vh;
 }
 
-html, body, #root {
-    text-align: center;
-    background-color: #9fadb3;
-    height: 100%;
-}
+
+
+/* CSS HEX
+--dodger-blue: #1890ffff;   PRIMARY
+--onyx: #393d3fff;          BACKGROUND
+--white: #fdfdffff;         WHITE
+--silver: #c6c5b9ff;        SILVER
+--citrine: #e0ca3cff;       YELLOW
+*/

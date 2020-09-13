@@ -3,6 +3,12 @@ import firebase from "../../firebase.js";
 import {Link} from "@reach/router";
 import {UserContext} from "../../providers/UserProvider";
 import Wrapper from "../Wrapper";
+import {Button} from "antd";
+import {faEdit} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Title from "antd/lib/typography/Title";
+import Paragraph from "antd/lib/typography/Paragraph";
+
 
 class ShowImpl extends Component {
     constructor(props) {
@@ -34,19 +40,21 @@ class ShowImpl extends Component {
             <Wrapper>
                 <div>
                     { this.props.admin ?
-                        <Link to={`/${this.state.key}/edit`}>Edit</Link>
+                        <Button type={"default"} style={{marginBottom: 10}}><Link to={`/${this.state.key}/edit`}>Edit <FontAwesomeIcon icon={faEdit}/></Link></Button>
                         :
                         null
                     }
 
                     <br/>
+                    <Title level={2} style={{color: "white", marginTop: "30px", fontWeight: 300}}>{this.state.post.title}</Title>
 
-                    <img src={this.state.post.cover} alt={""} style={{maxWidth:400}}/>
+                    <img src={this.state.post.cover} alt={""} style={{maxHeight:"50vh", borderRadius: 10}}/>
                     <br/>
 
-                    Title: {this.state.post.title}
                     <br/>
-                    Desc: {this.state.post.desc}
+                    <Paragraph style={{color: "#fdfdffff", textAlign: "justify", marginBottom: 0}}>
+                        {this.state.post.desc}
+                    </Paragraph>
                 </div>
             </Wrapper>
 

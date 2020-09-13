@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import firebase from "../../firebase.js";
-import {Link} from "@reach/router";
-import Wrapper from "../Wrapper";
 import GuestWrapper from "../GuestWrapper";
+import Title from "antd/lib/typography/Title";
+import Paragraph from "antd/lib/typography/Paragraph";
 
 class GuestShow extends Component {
     constructor(props) {
@@ -34,12 +34,16 @@ class GuestShow extends Component {
             <GuestWrapper>
                 <div>
 
-                    <img src={this.state.post.cover} alt={""} style={{maxWidth:400}}/>
                     <br/>
+                    <Title level={2} style={{color: "white", marginTop: "30px", fontWeight: 300}}>{this.state.post.title}</Title>
+
+                    <img src={this.state.post.cover} alt={""} style={{maxHeight:"50vh", borderRadius: 10}}/>
                     <br/>
-                    Title: {this.state.post.title}
+
                     <br/>
-                    Desc: {this.state.post.desc}
+                    <Paragraph style={{color: "#fdfdffff", textAlign: "justify", marginBottom: 0}}>
+                        {this.state.post.desc}
+                    </Paragraph>
                 </div>
             </GuestWrapper>
 

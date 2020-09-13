@@ -1,7 +1,10 @@
-import React, {Component } from "react";
+import React, {Component} from "react";
 import firebase from "../../firebase";
 import {Link} from "@reach/router";
 import GuestWrapper from "../GuestWrapper";
+import {List} from "antd";
+import Title from "antd/lib/typography/Title";
+import defaultPost from "../../static/default-post.png";
 
 class GuestBrowse extends Component {
     constructor(props) {
@@ -17,7 +20,7 @@ class GuestBrowse extends Component {
         const posts = [];
 
         querySnapshot.forEach((doc) => {
-            const { title, desc, cover, posted, updated } = doc.data();
+            const {title, desc, cover, posted, updated} = doc.data();
             posts.push({
                 key: doc.id,
                 doc,  // snapshot
@@ -29,7 +32,7 @@ class GuestBrowse extends Component {
             });
         });
 
-        this.setState( {
+        this.setState({
             posts
         })
     }
@@ -38,31 +41,49 @@ class GuestBrowse extends Component {
         this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
     }
 
+    noCoverImg = (e) => {
+        e.target.src = defaultPost
+        // console.log(e)
+    }
+
     render() {
         return (
             <GuestWrapper>
-                <div>
-                    <table style={{margin: "auto"}}>
-                        <thead>
-                        <tr>
-                            <th></th>
-                            <th>Title</th>
-                            <th>Date</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {this.state.posts.map(post =>
-                            <tr>
-                                <td>
-                                    <Link to={`/guest/${post.key}`}><img src={post.cover} alt={""} style={{maxWidth:400}}/></Link>
-                                    <br/></td>
-                                <td><Link to={`/guest/${post.key}`}>{post.title}</Link></td>
-                                <td>{(new Date(post.posted)).toLocaleDateString()}</td>
-                            </tr>
-                        )}
-                        </tbody>
-                    </table>
-                </div>
+                <List itemLayout={"vertical"} size={"large"} dataSource={this.state.posts}
+                      style={{background: "#fdfdffff", borderRadius: 10}}
+                      renderItem={
+                          item => (
+                              <List.Item key={item.posted}>
+                                  <List.Item.Meta
+                                      avatar={<Link to={`/guest/${item.key}`}><img width={100} height={100} onError={this.noCoverImg} src={item.cover} style={{ objectFit: "cover", borderRadius: 4}} alt={""}/></Link>}
+                                      title={
+                                          <Link to={`/guest/${item.key}`} style={{fontWeight: 400}}>
+                                              {(new Date(item.posted)).toLocaleDateString()} - {item.title}
+                                          </Link>
+                                      }
+                                      description={
+                                          <div>
+                                              <Title level={5}
+                                                     style={{
+                                                         color: "#393d3fff",
+                                                         textAlign: "left",
+                                                         marginBottom: 0,
+                                                         marginTop: 0,
+                                                         fontWeight: 400
+                                                     }}
+                                                     ellipsis={{rows: 3}}>
+                                                  <Link to={`/guest/${item.key}`}
+                                                        style={{fontWeight: 400, color: "#393d3fff"}}>
+                                                      {item.desc}
+                                                  </Link>
+                                              </Title>
+                                          </div>
+                                      }
+                                  />
+                              </List.Item>
+                          )
+                      }
+                />
             </GuestWrapper>
         );
     }

@@ -11,6 +11,8 @@ import Show from "./blog/Show";
 import Browse from "./blog/Browse";
 import GuestBrowse from "./blog/GuestBrowse";
 import GuestShow from "./blog/GuestShow";
+import 'antd/dist/antd.css'
+
 
 function Application() {
     const user = useContext(UserContext);
