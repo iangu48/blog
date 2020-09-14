@@ -4,20 +4,21 @@
   "private": true,
   "homepage": "https://blog.iangu.me",
   "dependencies": {
+    "@ant-design/icons": "^4.2.2",
+    "@fortawesome/fontawesome-svg-core": "^1.2.30",
+    "@fortawesome/free-solid-svg-icons": "^5.14.0",
+    "@fortawesome/react-fontawesome": "^0.1.11",
     "@reach/router": "^1.3.4",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
+    "antd": "^4.6.4",
     "firebase": "^7.20.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.3",
-    "antd": "^4.6.4",
     "react-particles-js": "^3.3.0",
-    "@fortawesome/react-fontawesome": "^0.1.11",
-    "@fortawesome/free-solid-svg-icons": "^5.14.0",
-    "@fortawesome/fontawesome-svg-core": "^1.2.30",
-    "@ant-design/icons": "^4.2.2"
+    "react-scripts": "3.4.3",
+    "@tinymce/tinymce-react": "^3.6.1"
   },
   "scripts": {
     "start": "react-scripts start",

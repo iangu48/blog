@@ -2,6 +2,10 @@ import React, {Component} from "react";
 import firebase, {storage} from "../../firebase";
 import {Link, navigate} from "@reach/router";
 import Wrapper from "../Wrapper";
+import Title from "antd/lib/typography/Title";
+import {Button, Form, Input} from "antd";
+import Text from "antd/lib/typography/Text";
+import RichEditor from "../RichEditor";
 
 class New extends Component {
     constructor(props) {
@@ -10,11 +14,18 @@ class New extends Component {
         this.state = {
             title: '',
             desc: '',
+            content: '',
             posted: Date.now(),
             updated: Date.now(),
             cover: '',
 
         };
+    }
+
+    onEditorChange = (content, editor) => {
+        const state = this.state;
+        state.content = content;
+        this.setState({post: state});
     }
 
     onChange = (e) => {
@@ -32,12 +43,13 @@ class New extends Component {
     onSubmit = (e) => {
         e.preventDefault();
 
-        const { title, desc, posted, updated, cover } = this.state;
+        const { title, desc, content, posted, updated, cover } = this.state;
 
         if (cover === '') {
             this.postsCollection.add({
                 title,
                 desc,
+                content,
                 posted,
                 updated,
                 cover
@@ -45,6 +57,7 @@ class New extends Component {
                 this.setState({
                     title: '',
                     desc: '',
+                    content: '',
                     posted: Date.now(),
                     updated: Date.now(),
                     cover: '',
@@ -66,6 +79,7 @@ class New extends Component {
                         this.postsCollection.add({
                             title,
                             desc,
+                            content,
                             posted,
                             updated,
                             cover: url
@@ -73,6 +87,7 @@ class New extends Component {
                             this.setState({
                                 title: '',
                                 desc: '',
+                                content: '',
                                 posted: Date.now(),
                                 updated: Date.now(),
                                 cover: '',
@@ -88,27 +103,38 @@ class New extends Component {
     }
 
     render() {
-        const {title, desc } = this.state;
+        const layout = {
+            labelCol: { span: 4 },
+            wrapperCol: { span: 20 },
+        };
+
         return (
             <Wrapper>
-                <div>
-                    <h4>new post</h4>
-                    <h4><Link to="/">browse</Link></h4>
+                <Title level={2} style={{color: "white", marginTop: "30px", fontWeight: 300}}>New Post</Title>
 
-                    <form onSubmit={this.onSubmit}>
-                        <label htmlFor="title">Title:</label>
-                        <input type="text" name="title" value={title} onChange={this.onChange} placeholder="Title"/>
+                <Form onSubmit={this.onSubmit} layout={"horizontal"} {...layout}>
+                    <Form.Item label={<Text style={{color: "#fdfdffff", fontWeight: 300}}>Title</Text>}>
+                        <Input type="text" name="title" value={this.state.title}
+                               onChange={this.onChange} placeholder="Title"/>
+                    </Form.Item>
 
-                        <label htmlFor="desc">Description:</label>
-                        <textArea name="desc" onChange={this.onChange} placeholder="Description" cols="80"
-                                  rows="3">{desc}</textArea>
+                    <Form.Item label={<Text style={{color: "#fdfdffff", fontWeight: 300}}>Upload/change cover</Text>}>
+                        <Input type={"file"} name={"cover"} onChange={this.onFileUpload}>
+                        </Input>
+                        <img src={this.state.cover} alt={""} style={{maxWidth:100}}/>
+                    </Form.Item>
 
-                        <label htmlFor={"cover"}>Upload Cover</label>
-                        <input type={"file"} name={"cover"} onChange={this.onFileUpload}/>
+                    <Form.Item label={<Text style={{color: "#fdfdffff", fontWeight: 300}}>Description</Text>}>
+                        <Input type="text" name="desc" value={this.state.desc}
+                               onChange={this.onChange} placeholder="Description"/>
+                    </Form.Item>
 
-                        <button type="submit">Submit</button>
-                    </form>
-                </div>
+                    <Form.Item label={<Text style={{color: "#fdfdffff", fontWeight: 300}}>Content</Text>}>
+                        <RichEditor content={this.state.content} onEditorChange={this.onEditorChange}/>
+                    </Form.Item>
+
+                    <Button type="primary" onClick={this.onSubmit}>Submit</Button>
+                </Form>
             </Wrapper>
         );
     }

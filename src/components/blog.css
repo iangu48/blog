@@ -1,6 +1,7 @@
 .App, html, body, #root {
     background-color: #393d3f;
     height: 100%;
+    color: white;
 }
 
 .particles-js {

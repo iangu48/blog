@@ -3,7 +3,7 @@ import firebase from "../../firebase.js";
 import {Link} from "@reach/router";
 import {UserContext} from "../../providers/UserProvider";
 import Wrapper from "../Wrapper";
-import {Button} from "antd";
+import {Space, Button} from "antd";
 import {faEdit} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Title from "antd/lib/typography/Title";
@@ -52,9 +52,11 @@ class ShowImpl extends Component {
                     <br/>
 
                     <br/>
-                    <Paragraph style={{color: "#fdfdffff", textAlign: "justify", marginBottom: 0}}>
-                        {this.state.post.desc}
-                    </Paragraph>
+                    <Space direction={"horizontal"}>
+                        <div dangerouslySetInnerHTML={{
+                            __html: this.state.post.content
+                        }}/>
+                    </Space>
                 </div>
             </Wrapper>
 

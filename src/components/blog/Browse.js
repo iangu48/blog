@@ -51,7 +51,7 @@ class BrowseImpl extends Component {
         return (
             <Wrapper>
                 {this.props.admin ?
-                    <Button type={"primary"} style={{marginBottom: 10}}><Link to="/new">New post</Link></Button>
+                    <Button type={"primary"} style={{marginBottom: 10}}><Link to="/new">New post +</Link></Button>
                     :
                     null
                 }

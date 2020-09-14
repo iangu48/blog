@@ -3,6 +3,7 @@ import firebase from "../../firebase.js";
 import GuestWrapper from "../GuestWrapper";
 import Title from "antd/lib/typography/Title";
 import Paragraph from "antd/lib/typography/Paragraph";
+import {Space} from "antd";
 
 class GuestShow extends Component {
     constructor(props) {
@@ -41,9 +42,11 @@ class GuestShow extends Component {
                     <br/>
 
                     <br/>
-                    <Paragraph style={{color: "#fdfdffff", textAlign: "justify", marginBottom: 0}}>
-                        {this.state.post.desc}
-                    </Paragraph>
+                    <Space direction={"horizontal"}>
+                        <div dangerouslySetInnerHTML={{
+                            __html: this.state.post.content
+                        }}/>
+                    </Space>
                 </div>
             </GuestWrapper>
 

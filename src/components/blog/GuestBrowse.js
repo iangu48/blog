@@ -51,6 +51,7 @@ class GuestBrowse extends Component {
             <GuestWrapper>
                 <List itemLayout={"vertical"} size={"large"} dataSource={this.state.posts}
                       style={{background: "#fdfdffff", borderRadius: 10}}
+
                       renderItem={
                           item => (
                               <List.Item key={item.posted}>

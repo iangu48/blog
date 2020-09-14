@@ -3,14 +3,22 @@ import firebase, {storage} from "../../firebase";
 import {navigate} from "@reach/router";
 import {UserContext} from "../../providers/UserProvider";
 import Wrapper from "../Wrapper";
+import Title from "antd/lib/typography/Title";
+import { Row, Col, Form, Input, Button} from "antd";
+import Text from "antd/lib/typography/Text";
+import RichEditor from "../RichEditor";
+
 
 class EditImpl extends Component {
+
     constructor(props) {
+
         super(props);
         this.state = {
             key: '',
             title: '',
             desc: '',
+            content: '',
             posted: '',
             updated: '',
             cover: '',
@@ -29,6 +37,7 @@ class EditImpl extends Component {
     
     componentDidMount() {
         const ref = firebase.firestore().collection('posts').doc(this.props.id);
+
         ref.get().then((doc) => {
            if (doc.exists) {
                const post = doc.data();
@@ -36,6 +45,7 @@ class EditImpl extends Component {
                    key: doc.id,
                    title: post.title,
                    desc: post.desc,
+                   content: post.content,
                    posted: post.posted,
                    updated: post.updated,
                    cover: post.cover,
@@ -44,6 +54,12 @@ class EditImpl extends Component {
                console.log("Cannot find document")
            }
         });
+    }
+
+    onEditorChange = (content, editor) => {
+        const state = this.state;
+        state.content = content;
+        this.setState({post: state});
     }
     
     onChange = (e) => {
@@ -61,18 +77,19 @@ class EditImpl extends Component {
     onSubmit = (e) => {
         e.preventDefault()
 
-        const { title, desc, posted, updated = Date.now(), cover } = this.state;
+        const { title, desc, content, posted, updated = Date.now(), cover } = this.state;
 
         const updateRef = firebase.firestore().collection('posts').doc(this.state.key);
 
         if (typeof cover === "string") {
             updateRef.set({
-                title, desc, posted, updated, cover
+                title, desc, content, posted, updated: Date.now(), cover
             }).then((docRef) => {
                 this.setState({
                     key: '',
                     title: '',
                     desc: '',
+                    content: '',
                     posted: '',
                     updated: '',
                     cover: '',
@@ -98,6 +115,7 @@ class EditImpl extends Component {
                                 key: '',
                                 title: '',
                                 desc: '',
+                                content: '',
                                 posted: '',
                                 updated: '',
                                 cover: '',
@@ -117,31 +135,53 @@ class EditImpl extends Component {
     }
 
     render() {
+        const layout = {
+            labelCol: { span: 4 },
+            wrapperCol: { span: 20 },
+        };
+
         return(
             <Wrapper>
-                <h3>Edit</h3>
-                <form onSubmit={this.onSubmit}>
-                    <label htmlFor="title">Title:</label>
-                    <input type="text" name="title" value={this.state.title}
-                           onChange={this.onChange} placeholder="Title"/>
+                <Row justify={"space-between"}>
+                    <Col offset={4}>
+                        <Title level={2} style={{color: "white", marginTop: "30px", fontWeight: 300}}>Edit</Title>
+                    </Col>
+                    <Col>
+                        <Title level={5} style={{textAlign: "right", color: "white", marginTop: "30px", fontWeight: 300}}>Posted: {(new Date(this.state.posted)).toLocaleDateString()}</Title>
+                        <Title level={5} style={{textAlign: "right", color: "white", marginTop: "0", fontWeight: 300}}>Last updated: {(new Date(this.state.updated)).toLocaleDateString()}</Title>
+                    </Col>
+                </Row>
 
-                    <label htmlFor="desc">Description:</label>
-                    <input type="text" name="desc" value={this.state.desc}
-                           onChange={this.onChange} placeholder="Description"/>
+                <Form onSubmit={this.onSubmit} layout={"horizontal"} {...layout}>
+                    <Form.Item label={<Text style={{color: "#fdfdffff", fontWeight: 300}}>Title</Text>}>
+                        <Input type="text" name="title" value={this.state.title}
+                               onChange={this.onChange} placeholder="Title"/>
+                    </Form.Item>
 
-                    <label htmlFor="cover">
-                        Upload/change cover
+                    <Form.Item label={<Text style={{color: "#fdfdffff", fontWeight: 300}}>Upload/change cover</Text>}>
+                        <Input type={"file"} name={"cover"} onChange={this.onFileUpload}>
+                        </Input>
                         <img src={this.state.cover} alt={""} style={{maxWidth:100}}/>
-                    </label>
-                    <input type={"file"} name={"cover"} onChange={this.onFileUpload}/>
+                    </Form.Item>
 
-                    <button type="submit">Submit</button>
-                </form>
+                    <Form.Item label={<Text style={{color: "#fdfdffff", fontWeight: 300}}>Description</Text>}>
+                        <Input type="text" name="desc" value={this.state.desc}
+                               onChange={this.onChange} placeholder="Description"/>
+                    </Form.Item>
+
+                    <Form.Item label={<Text style={{color: "#fdfdffff", fontWeight: 300}}>Content</Text>}>
+                        <RichEditor content={this.state.content} onEditorChange={this.onEditorChange}/>
+                    </Form.Item>
+
+
+
+                    <Button type="primary" onClick={this.onSubmit}>Submit</Button>
+                </Form>
                 <br/>
                 <br/>
                 <br/>
                 <br/>
-                <button onClick={this.delete.bind(this, this.state.key)}>Delete</button>
+                <Button danger type={"primary"} onClick={this.delete.bind(this, this.state.key)}>Delete</Button>
 
             </Wrapper>
         );
