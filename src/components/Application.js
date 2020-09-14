@@ -20,7 +20,7 @@ function Application() {
         user ?
             user.email === "iangu234@gmail.com" || user.email === "ian.gu@mail.utoronto.ca" ?
             // admin
-            <Router>
+            <Router basepath={process.env.PUBLIC_URL + '/'}>
                 <Browse path={"/"}/>
                 <ProfilePage path="/profile"/>
                 <New path={"/new"}/>
@@ -29,14 +29,14 @@ function Application() {
             </Router>
 
             : // logged in
-            <Router>
+            <Router basepath={process.env.PUBLIC_URL + '/'}>
                 <ProfilePage path="/profile"/>
                 <Browse path="/"/>
                 <Show path="/:id"/>
             </Router>
 
             : // not logged in
-            <Router>
+            <Router basepath={process.env.PUBLIC_URL + '/'}>
                 <SignUp path="signUp" />
                 <SignIn path="/" />
                 <PasswordReset path = "passwordReset" />
