@@ -32,9 +32,23 @@ class GuestBrowse extends Component {
             });
         });
 
+        this.sortPosts(posts)
         this.setState({
             posts
         })
+    }
+
+    sortPosts(posts) {
+        function compare(a, b) {
+            if (a.posted < b.posted) {
+                return 1;
+            } else if (a.posted > b.posted) {
+                return -1;
+            }
+            return 0;
+        }
+
+        posts.sort(compare)
     }
 
     componentDidMount() {
@@ -58,15 +72,22 @@ class GuestBrowse extends Component {
                                   <List.Item.Meta
                                       avatar={<Link to={`/guest/${item.key}`}><img width={100} height={100} onError={this.noCoverImg} src={item.cover} style={{ objectFit: "cover", borderRadius: 4}} alt={""}/></Link>}
                                       title={
-                                          <Link to={`/guest/${item.key}`} style={{fontWeight: 400}}>
+                                          <Title level={4}
+                                                 style={{
+                                                     textAlign: "left",
+                                                     marginBottom: 0,
+                                                     marginTop: 0,
+                                                     fontWeight: 400
+                                                 }}>
+                                          <Link to={`/guest/${item.key}`} style={{color: "#393d3fff",fontWeight: 400, textAlign: "left"}}>
                                               {(new Date(item.posted)).toLocaleDateString()} - {item.title}
                                           </Link>
+                                          </Title>
                                       }
                                       description={
                                           <div>
                                               <Title level={5}
                                                      style={{
-                                                         color: "#393d3fff",
                                                          textAlign: "left",
                                                          marginBottom: 0,
                                                          marginTop: 0,

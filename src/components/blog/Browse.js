@@ -18,6 +18,7 @@ class BrowseImpl extends Component {
     }
 
     onCollectionUpdate = (querySnapshot) => {
+
         const posts = [];
 
         querySnapshot.forEach((doc) => {
@@ -33,10 +34,26 @@ class BrowseImpl extends Component {
             });
         });
 
+        this.sortPosts(posts)
         this.setState( {
             posts
         })
     }
+
+
+    sortPosts(posts) {
+        function compare(a, b) {
+            if (a.posted < b.posted) {
+                return 1;
+            } else if (a.posted > b.posted) {
+                return -1;
+            }
+            return 0;
+        }
+
+        posts.sort(compare)
+    }
+
 
     componentDidMount() {
         this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
@@ -67,14 +84,17 @@ class BrowseImpl extends Component {
                                   <List.Item.Meta
                                       avatar={<Link to={`/${item.key}`}><img width={100} height={100} onError={this.noCoverImg} src={item.cover} style={{objectFit: "cover", borderRadius: 4}} alt={""}/></Link>}
                                       title={
-                                          <Link to={`/${item.key}`} style={{fontWeight: 400}}>
-                                              {(new Date(item.posted)).toLocaleDateString()} - {item.title}
-                                          </Link>
+                                          <Title level={4}
+                                                 style={{textAlign: "left", marginBottom: 0, marginTop: 0, fontWeight: 400}}>
+                                              <Link to={`/${item.key}`} style={{fontWeight: 400, color: "#393d3fff"}}>
+                                                  {(new Date(item.posted)).toLocaleDateString()} - {item.title}
+                                              </Link>
+                                          </Title>
                                       }
                                       description={
                                           <div>
                                               <Title level={5}
-                                                     style={{color: "#393d3fff", textAlign: "left", marginBottom: 0, marginTop: 0, fontWeight: 400}}
+                                                     style={{textAlign: "left", marginBottom: 0, marginTop: 0, fontWeight: 400}}
                                                      ellipsis={{rows: 3}}>
                                                   <Link to={`/${item.key}`} style={{fontWeight: 400, color: "#393d3fff"}}>
                                                       {item.desc}
