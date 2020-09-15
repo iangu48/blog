@@ -71,7 +71,8 @@ class EditImpl extends Component {
     onFileUpload = (e) => {
         const state = this.state;
         state[e.target.name] = e.target.files[0];
-        this.setState(state);
+        this.setState({post: state});
+        console.log(state)
     }
     
     onSubmit = (e) => {
@@ -109,7 +110,7 @@ class EditImpl extends Component {
                     .getDownloadURL()
                     .then((url) => {
                         updateRef.set({
-                            title, desc, posted, updated, cover: url
+                            title, desc, content, posted, updated, cover: url
                         }).then((docRef) => {
                             this.setState({
                                 key: '',
@@ -159,8 +160,7 @@ class EditImpl extends Component {
                     </Form.Item>
 
                     <Form.Item label={<Text style={{color: "#fdfdffff", fontWeight: 300}}>Upload/change cover</Text>}>
-                        <Input type={"file"} name={"cover"} onChange={this.onFileUpload}>
-                        </Input>
+                        <Input type={"file"} name={"cover"} onChange={this.onFileUpload}/>
                         <img src={this.state.cover} alt={""} style={{maxWidth:100}}/>
                     </Form.Item>
 
