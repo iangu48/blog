@@ -129,7 +129,7 @@ const SignUp = () => {
 
                     </Form.Item>
                     <Form.Item>
-                        <Link to = "guest">
+                        <Link to = "/guest">
                             Continue as guest
                         </Link>
                     </Form.Item>
