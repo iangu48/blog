@@ -92,7 +92,7 @@ const SignIn = () => {
                         <Text style={{color: "#fdfdffff"}}>Don't have an account?<Link to="signUp"> Sign up here </Link></Text>
                     </Form.Item>
                     <Form.Item>
-                        <Link to = "guest">
+                        <Link to = "/guest">
                             Continue as guest
                         </Link>
                     </Form.Item>
