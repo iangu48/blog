@@ -39,6 +39,7 @@ function Application() {
             <Router basepath={process.env.PUBLIC_URL + '/'}>
                 <SignUp path="signUp" />
                 <SignIn path="/" />
+                <SignIn path="/:id" />
                 <PasswordReset path = "passwordReset" />
                 <GuestBrowse path={"guest"}/>
                 <GuestShow path={"guest/:id"}/>
